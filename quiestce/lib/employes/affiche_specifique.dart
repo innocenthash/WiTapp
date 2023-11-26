@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'package:quiestce/employes/affiche_cv.dart';
 import 'package:quiestce/employes/edit.dart';
 import 'package:quiestce/models/employe.dart';
 import 'package:quiestce/options/couleurs.dart';
@@ -16,6 +18,7 @@ class AfficheSpecifique extends StatefulWidget {
 
 class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
   final sqliteDatabase = SqliteDatabase();
+   Color vertEmeraude = Couleurs.vertEmeraude;
 
   Future<void> confirmerSuppression(int id) async {
     await sqliteDatabase.deleteEmploye(id);
@@ -55,7 +58,6 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
     );
   }
 
-  Color vertEmeraude = Couleurs.vertEmeraude;
   @override
   void initState() {
     // afficheEmployeSpecifique();
@@ -252,6 +254,13 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
               ],
             ),
           ),
+          Container(
+            margin: const EdgeInsets.all(20),
+            width: double.infinity,
+        child: ElevatedButton.icon(onPressed: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> AfficheCv(employe:widget.employe))) ;
+        }, icon:  Icon(Icons.picture_as_pdf_sharp,color: vertEmeraude), label: const Text('Cv')),
+          ) , 
           Container(
             margin: EdgeInsets.only(top: 20),
             child: Row(

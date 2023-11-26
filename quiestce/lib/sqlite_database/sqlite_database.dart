@@ -22,7 +22,7 @@ class SqliteDatabase {
     final path = join(await getDatabasesPath(), 'ressourcehumain.db');
     return await openDatabase(
       path,
-      version: 21,
+      version: 3,
       onCreate: _createTables,
       onUpgrade: _onUpgrade,
     );
@@ -32,7 +32,7 @@ class SqliteDatabase {
     try {
       // creation de la table ressourcehumaine
       await db.execute(
-          '''CREATE TABLE IF NOT EXISTS Employe (id INTEGER PRIMARY KEY , nom TEXT , prenom TEXT , numero INTEGER , email TEXT , adresse TEXT , poste TEXT , date TEXT , image BLOB)''');
+          '''CREATE TABLE IF NOT EXISTS Employe (id INTEGER PRIMARY KEY , nom TEXT , prenom TEXT , numero INTEGER , email TEXT , adresse TEXT , poste TEXT , date TEXT , image BLOB , pdfcv BLOB ,pdfFilePath TEXT)''');
     } catch (e) {
       print(e);
     }
@@ -96,6 +96,16 @@ class SqliteDatabase {
 
   FutureOr<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (newVersion > oldVersion) {
+       final result = await db.rawQuery("PRAGMA table_info('Employe')");
+       final columnExists = result.any((column) => column['name'] == 'pdfcv');
+       final col = result.any((column) => column['name'] == 'pdfFilePath');
+       if (!col) {
+        await db.execute('ALTER TABLE Employe ADD COLUMN pdfFilePath TEXT');
+      }
+
+      if (!columnExists) {
+        await db.execute('ALTER TABLE Employe ADD COLUMN pdfcv BLOB');
+      }
       final employe = await db.rawQuery("PRAGMA table_info('Employe')");
       final employeExists = employe.isNotEmpty;
       if (!employeExists) {

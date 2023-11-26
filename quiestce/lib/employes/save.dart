@@ -132,7 +132,7 @@ class _SaveState extends State<Save> {
   //   }
   // }
 
-  String? pdfName = 'assets/pdf/pdfpardefaut.pdf';
+  String pdfName = 'assets/pdf/cv campus_compressed.pdf';
   String? cvPdfFile;
   Uint8List? pdfContenue;
 // prendre le pdf par defaut
@@ -177,7 +177,7 @@ class _SaveState extends State<Save> {
     //     });
     //   });
     // TODO: implement initState;
-    insertDefaultPdf();
+    // insertDefaultPdf();
     super.initState();
   }
 
@@ -383,20 +383,12 @@ class _SaveState extends State<Save> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          _imageProfil != null
-                              ? Padding(
+                          pdfContenue != null && cvPdfFile!=null ? Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: ClipOval(
-                                    child: Image.memory(
-                                      _imageProfil!,
-                                      cacheHeight: 100,
-                                      cacheWidth: 100,
-                                    ),
-                                  ),
-                                )
-                              : const Padding(
+                                  child:Text(cvPdfFile!) ,
+                                ) : const Padding(
                                   padding: EdgeInsets.all(8),
-                                  child: Text('aucun fichier selectionner'),
+                                  child: Text('Aucun fichier selectionner'),
                                   //                             PDFView(
                                   //   filePath:pathPDF ,
                                   //   autoSpacing: true,
@@ -404,12 +396,14 @@ class _SaveState extends State<Save> {
                                   //   pageFling: true,
                                   // ),
                                 ),
+                              
+                             
                           OutlinedButton.icon(
                             onPressed: () {
                               pickPdf();
                             },
                             icon: const Icon(Icons.picture_as_pdf),
-                            label: const Text('Exporter le fichier pdf'),
+                            label: const Text('Exporter Un fichier pdf'),
                           ),
                         ],
                       ),
@@ -439,6 +433,8 @@ class _SaveState extends State<Save> {
                           String adresseEmploye = adresse.text;
                           String posteEmploye = poste.text;
                           String date = dateDembauche.text;
+                           // Convertir la chaîne en une liste d'entiers (Uint8List)
+                          Uint8List pdfpardefaut = Uint8List.fromList(pdfName.codeUnits);
 
                           if (_imageProfil == null ||
                               nomEmploye.isEmpty ||
@@ -466,6 +462,7 @@ class _SaveState extends State<Save> {
                                 numero: convertNumero,
                                 poste: posteEmploye,
                                 prenom: prenomEmploye,
+                                pdfcv: pdfContenue ?? pdfpardefaut,
                                 image: _imageProfil);
 
                             int employeId =

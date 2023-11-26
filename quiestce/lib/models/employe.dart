@@ -9,7 +9,9 @@ class Employe {
   String adresse;
   String poste;
   String date;
+  Uint8List? pdfcv;
   Uint8List? image;
+  String? pdfFilePath;
 
   Employe(
       {required this.id,
@@ -20,7 +22,10 @@ class Employe {
       required this.numero,
       required this.poste,
       required this.prenom,
-      required this.image});
+         required this.pdfcv ,
+      required this.image ,
+        this.pdfFilePath
+      });
 
   Map<String, dynamic> toMap() {
     return {
@@ -31,6 +36,7 @@ class Employe {
       'email': email,
       'numero': numero,
       'poste': poste,
+       'pdfcv': pdfcv,
       'prenom': prenom,
       'image': image
     };
@@ -46,6 +52,7 @@ class Employe {
         numero: map['numero'],
         poste: map['poste'],
         prenom: map['prenom'],
+        pdfcv:map['pdfcv'] ,
         image: map['image']);
   }
 }

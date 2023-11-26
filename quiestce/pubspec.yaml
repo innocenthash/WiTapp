@@ -87,6 +87,8 @@ flutter:
     - assets/alert/false-removebg-preview.png
     - assets/images/7125204-removebg-preview.png
     - assets/pdf/pdfpardefaut.pdf
+    - assets/pdf/cv campus_compressed.pdf
+   
   
 
   # An image asset can refer to one or more resolution-specific "variants", see

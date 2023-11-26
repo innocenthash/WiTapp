@@ -332,6 +332,7 @@ class _EditState extends State<Edit> {
                                 numero: widget.employe.numero,
                                 poste: widget.employe.poste,
                                 prenom: widget.employe.prenom,
+                                pdfcv: widget.employe.pdfcv,
                                 image: _imageProfil!=null ? widget.employe.image:widget.employe.image);
 
                             int employeUpdateId =
