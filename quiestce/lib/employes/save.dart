@@ -2,18 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as path;
 import 'package:quiestce/models/employe.dart';
 import 'package:quiestce/options/couleurs.dart';
-import 'package:path/path.dart' as path;
 import 'package:quiestce/sqlite_database/sqlite_database.dart';
-import 'package:flutter_pdfview/flutter_pdfview.dart';
-import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:flutter/foundation.dart';
 
 class Save extends StatefulWidget {
   const Save({super.key});
@@ -95,20 +91,18 @@ class _SaveState extends State<Save> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Employe enregistré avec succès !'),
-            content: Container(
-              child: Image.asset(
-                'assets/alert/true-removebg-preview.png',
-                // cacheHeight: 100,
-                // cacheWidth: 100,
-              ),
+            title: const Text('Employe enregistré avec succès !'),
+            content: Image.asset(
+              'assets/alert/true-removebg-preview.png',
+              // cacheHeight: 100,
+              // cacheWidth: 100,
             ),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Ok'),
+                child: const Text('Ok'),
               ),
             ],
           );
@@ -132,20 +126,31 @@ class _SaveState extends State<Save> {
   //   }
   // }
 
-  String pdfName = 'assets/pdf/cv campus_compressed.pdf';
+  String pdfName = 'assets/pdf/cv_campus_compressed.pdf';
   String? cvPdfFile;
   Uint8List? pdfContenue;
 // prendre le pdf par defaut
   Future<void> insertDefaultPdf() async {
     // Charger le fichier PDF par défaut depuis le dossier assets/pdf/
-    ByteData data = await rootBundle.load(pdfName!);
-    Uint8List defaultPdfContent = data.buffer.asUint8List();
+    // ByteData data = await rootBundle.load(pdfName);
+    // Uint8List defaultPdfContent = data.buffer.asUint8List();
 
+    // String pdfPath =
+    //     'assets/pdf/$pdfName'; // Assurez-vous d'avoir le bon chemin relatif
+    // Uint8List defaultPdfContent = await File(pdfPath).readAsBytes();
+
+    Uint8List defaultPdfContent = await loadPdfFromAssets(pdfName);
     // Insérer le fichier PDF par défaut dans la base de données
 
     setState(() {
       pdfContenue = defaultPdfContent;
     });
+  }
+
+  Future<Uint8List> loadPdfFromAssets(String pdfAssetPath) async {
+    ByteData data = await rootBundle.load(pdfAssetPath);
+    List<int> bytes = data.buffer.asUint8List();
+    return Uint8List.fromList(bytes);
   }
 
   Future<void> pickPdf() async {
@@ -177,7 +182,7 @@ class _SaveState extends State<Save> {
     //     });
     //   });
     // TODO: implement initState;
-    // insertDefaultPdf();
+    // ttDefaultPdf();
     super.initState();
   }
 
@@ -238,7 +243,7 @@ class _SaveState extends State<Save> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+                    margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                     child: TextField(
                       controller: numeroTelephone,
                       keyboardType: TextInputType.phone,
@@ -255,7 +260,7 @@ class _SaveState extends State<Save> {
                     ),
                   ),
                   Container(
-                    margin: EdgeInsets.only(top: 20, left: 20, right: 20),
+                    margin: const EdgeInsets.only(top: 20, left: 20, right: 20),
                     child: TextField(
                       controller: email,
                       keyboardType: TextInputType.emailAddress,
@@ -345,68 +350,62 @@ class _SaveState extends State<Save> {
                     ),
                   ),
 
-                  Container(
-                    // pour se scroller en horizontal
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          _imageProfil != null
-                              ? Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: ClipOval(
-                                    child: Image.memory(
-                                      _imageProfil!,
-                                      cacheHeight: 100,
-                                      cacheWidth: 100,
-                                    ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        _imageProfil != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: ClipOval(
+                                  child: Image.memory(
+                                    _imageProfil!,
+                                    cacheHeight: 100,
+                                    cacheWidth: 100,
                                   ),
-                                )
-                              : const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text('Aucune image selectionné')),
-                          OutlinedButton.icon(
-                            onPressed: () {
-                              selectImageProfilGallery();
-                            },
-                            icon: const Icon(Icons.image),
-                            label: const Text('image'),
-                          ),
-                        ],
-                      ),
+                                ),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text('Aucune image selectionné')),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            selectImageProfilGallery();
+                          },
+                          icon: const Icon(Icons.image),
+                          label: const Text('image'),
+                        ),
+                      ],
                     ),
                   ),
 
-                  Container(
-                    // pour se scroller en horizontal
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          pdfContenue != null && cvPdfFile!=null ? Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child:Text(cvPdfFile!) ,
-                                ) : const Padding(
-                                  padding: EdgeInsets.all(8),
-                                  child: Text('Aucun fichier selectionner'),
-                                  //                             PDFView(
-                                  //   filePath:pathPDF ,
-                                  //   autoSpacing: true,
-                                  //   pageSnap: true,
-                                  //   pageFling: true,
-                                  // ),
-                                ),
-                              
-                             
-                          OutlinedButton.icon(
-                            onPressed: () {
-                              pickPdf();
-                            },
-                            icon: const Icon(Icons.picture_as_pdf),
-                            label: const Text('Exporter Un fichier pdf'),
-                          ),
-                        ],
-                      ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        pdfContenue != null && cvPdfFile != null
+                            ? Padding(
+                                padding: const EdgeInsets.all(8),
+                                child: Text(cvPdfFile!),
+                              )
+                            : const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text('Aucun fichier selectionner'),
+                                //                             PDFView(
+                                //   filePath:pathPDF ,
+                                //   autoSpacing: true,
+                                //   pageSnap: true,
+                                //   pageFling: true,
+                                // ),
+                              ),
+                        OutlinedButton.icon(
+                          onPressed: () {
+                            pickPdf();
+                          },
+                          icon: const Icon(Icons.picture_as_pdf),
+                          label: const Text('Exporter Un fichier pdf'),
+                        ),
+                      ],
                     ),
                   ),
                   Container(
@@ -433,8 +432,13 @@ class _SaveState extends State<Save> {
                           String adresseEmploye = adresse.text;
                           String posteEmploye = poste.text;
                           String date = dateDembauche.text;
-                           // Convertir la chaîne en une liste d'entiers (Uint8List)
-                          Uint8List pdfpardefaut = Uint8List.fromList(pdfName.codeUnits);
+                          // // Convertir la chaîne en une liste d'entiers (Uint8List)
+                          // Uint8List pdfpardefaut =
+                          //     Uint8List.fromList(pdfName.codeUnits);
+
+                          if (pdfContenue == null) {
+                            await insertDefaultPdf();
+                          }
 
                           if (_imageProfil == null ||
                               nomEmploye.isEmpty ||
@@ -462,7 +466,7 @@ class _SaveState extends State<Save> {
                                 numero: convertNumero,
                                 poste: posteEmploye,
                                 prenom: prenomEmploye,
-                                pdfcv: pdfContenue ?? pdfpardefaut,
+                                pdfcv: pdfContenue,
                                 image: _imageProfil);
 
                             int employeId =

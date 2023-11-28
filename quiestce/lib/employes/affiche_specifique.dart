@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:quiestce/employes/affiche_cv.dart';
 import 'package:quiestce/employes/edit.dart';
 import 'package:quiestce/models/employe.dart';
@@ -18,7 +17,7 @@ class AfficheSpecifique extends StatefulWidget {
 
 class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
   final sqliteDatabase = SqliteDatabase();
-   Color vertEmeraude = Couleurs.vertEmeraude;
+  Color vertEmeraude = Couleurs.vertEmeraude;
 
   Future<void> confirmerSuppression(int id) async {
     await sqliteDatabase.deleteEmploye(id);
@@ -70,18 +69,18 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Informations',style: TextStyle(
-            fontSize: 20,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold
-          ),),
+        title: const Text(
+          'Informations',
+          style: TextStyle(
+              fontSize: 20, color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
           Container(
             width: double.infinity,
             height: 250,
-            decoration: BoxDecoration(color: Colors.white),
+            decoration: const BoxDecoration(color: Colors.white),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -118,7 +117,7 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
             margin: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Color.fromARGB(221, 166, 172, 168),
+              color: const Color.fromARGB(221, 166, 172, 168),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -257,12 +256,19 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
           Container(
             margin: const EdgeInsets.all(20),
             width: double.infinity,
-        child: ElevatedButton.icon(onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> AfficheCv(employe:widget.employe))) ;
-        }, icon:  Icon(Icons.picture_as_pdf_sharp,color: vertEmeraude), label: const Text('Cv')),
-          ) , 
+            child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              AfficheCv(employe: widget.employe)));
+                },
+                icon: Icon(Icons.picture_as_pdf_sharp, color: vertEmeraude),
+                label: const Text('Cv')),
+          ),
           Container(
-            margin: EdgeInsets.only(top: 20),
+            margin: const EdgeInsets.only(top: 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -283,8 +289,13 @@ class _AfficheSpecifiqueState extends State<AfficheSpecifique> {
                       side: MaterialStatePropertyAll(
                           BorderSide(color: Colors.blueAccent))),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Edit(employe:widget.employe,afficheEmploye:widget.afficheEmploye,)));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Edit(
+                                  employe: widget.employe,
+                                  afficheEmploye: widget.afficheEmploye,
+                                )));
                   },
                   child: const Text(
                     'Modifiez',
